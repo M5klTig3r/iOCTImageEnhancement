@@ -112,3 +112,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+architectures/data/cifar-10-batches-py/test_batch
+architectures/data/cifar-10-batches-py/data_batch_5
+architectures/data/cifar-10-batches-py/data_batch_3
+architectures/data/cifar-10-batches-py/data_batch_4
+architectures/data/cifar-10-batches-py/data_batch_2
+architectures/data/cifar-10-batches-py/data_batch_1
+architectures/data/cifar-10-batches-py/batches.meta
+architectures/data/cifar-10-batches-py/readme.html
+architectures/data/cifar-10-python.tar.gz

@@ -100,6 +100,8 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 
 # hyperparameters
 model = CNN(num_classes)
+if torch.cuda.is_available():
+    model.cuda()
 
 # Set Loss function with criterion
 criterion = nn.CrossEntropyLoss()
