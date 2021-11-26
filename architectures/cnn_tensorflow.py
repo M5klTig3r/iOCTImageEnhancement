@@ -12,7 +12,7 @@ def conv(input, weights, bias, strides=1):
     input = tf.nn.bias_add(input, bias)
     return tf.nn.relu(input)
 
-def maxpool(input, kernel_size=2)
+def maxpool(input, kernel_size=2):
     return tf.nn.max_pool(input, ksize=[1, kernel_size, kernel_size, 1], strides=[1,kernel_size,kernel_size,1],padding='SAME')
 
 
