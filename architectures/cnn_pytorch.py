@@ -5,12 +5,19 @@ import torchvision
 import torchvision.transforms as transforms
 
 
+<<<<<<< Updated upstream
+=======
+#
+# from https://blog.paperspace.com/writing-cnns-from-scratch-in-pytorch/https://blog.paperspace.com/writing-cnns-from-scratch-in-pytorch/
+#
+>>>>>>> Stashed changes
 class CNN(nn.Module):
     #  Determine what layers and their order in CNN object
     # TODO - check the numbers! kernel size and stride
     def __init__(self, num_classes):
         super(CNN, self).__init__()
         self.conv_layer1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3)
+<<<<<<< Updated upstream
         # self.relu1 = nn.ReLU()
         self.conv_layer2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3)
         # self.relu1 = nn.ReLU()
@@ -20,6 +27,13 @@ class CNN(nn.Module):
         # self.relu1 = nn.ReLU()
         self.conv_layer4 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3)
         # self.relu1 = nn.ReLU()
+=======
+        self.conv_layer2 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3)
+        self.max_pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
+
+        self.conv_layer3 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3)
+        self.conv_layer4 = nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3)
+>>>>>>> Stashed changes
         self.max_pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         self.fc1 = nn.Linear(1600, 128)
@@ -29,6 +43,7 @@ class CNN(nn.Module):
     # Progresses data across layers
     def forward(self, x):
         out = self.conv_layer1(x)
+<<<<<<< Updated upstream
         # out = self.relu1(out)
         out = self.conv_layer2(out)
         # out = self.relu1(out)
@@ -38,6 +53,13 @@ class CNN(nn.Module):
         # out = self.relu1(out)
         out = self.conv_layer4(out)
         # out = self.relu1(out)
+=======
+        out = self.conv_layer2(out)
+        out = self.max_pool1(out)
+
+        out = self.conv_layer3(out)
+        out = self.conv_layer4(out)
+>>>>>>> Stashed changes
         out = self.max_pool2(out)
 
         out = out.reshape(out.size(0), -1)
@@ -100,8 +122,11 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 
 # hyperparameters
 model = CNN(num_classes)
+<<<<<<< Updated upstream
 if torch.cuda.is_available():
     model.cuda()
+=======
+>>>>>>> Stashed changes
 
 # Set Loss function with criterion
 criterion = nn.CrossEntropyLoss()
