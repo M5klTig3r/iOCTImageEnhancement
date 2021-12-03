@@ -21,9 +21,9 @@ class Discriminator(nn.Module):
                 layers.append(nn.LeakyReLU(0.2, inplace=True))
             # TODO - how do conv?
             if stride2:
-                layers.append(nn.Conv2d(4, 2))
+                layers.append(nn.Conv2d(in_feat, out_feat, (4,4)))
             else:
-                layers.append(nn.Conv2d(4, 1))
+                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4), (1, 1)))
             layers.append(nn.LeakyReLU(0.2, inplace=True))
             return layers
 
