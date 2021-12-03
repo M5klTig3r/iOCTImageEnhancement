@@ -15,7 +15,7 @@ from torchvision import datasets
 from torch.autograd import Variable
 
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as f
 import torch
 
 
@@ -92,7 +92,3 @@ optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt
 
 FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 LongTensor = torch.cuda.LongTensor if cuda else torch.LongTensor
-
-
-
-

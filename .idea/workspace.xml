@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/cGAN/Generator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/cGAN/Training.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN.py" afterDir="false" />
     </list>
@@ -47,7 +44,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TestProject" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="advanced.settings" />
   </component>
@@ -77,6 +74,9 @@
     <configuration name="cGAN" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="C:\Users\andyt\anaconda3\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/architectures" />
       <option name="IS_MODULE_SDK" value="false" />
@@ -109,6 +109,7 @@
       <updated>1638110104002</updated>
       <workItem from="1638110105331" duration="328000" />
       <workItem from="1638540240274" duration="3694000" />
+      <workItem from="1638544092547" duration="493000" />
     </task>
     <servers />
   </component>
