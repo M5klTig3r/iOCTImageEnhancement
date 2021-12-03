@@ -1,9 +1,15 @@
+import numpy as np
+
 import torch
+import torch.nn as nn
+
 
 class Generator(nn.Module):
-    def __init__(self):
+    def __init__(self, opt, img_shape):
         super(Generator, self).__init__()
 
+        self.opt = opt
+        self.img_shape = img_shape
         self.label_emb = nn.Embedding(opt.n_classes, opt.n_classes)
 
         def block(in_feat, out_feat, normalize=True):
@@ -26,5 +32,5 @@ class Generator(nn.Module):
         # Concatenate label embedding and image to produce input
         gen_input = torch.cat((self.label_emb(labels), noise), -1)
         img = self.model(gen_input)
-        img = img.view(img.size(0), *img_shape)
+        img = img.view(img.size(0), *self.img_shape)
         return img

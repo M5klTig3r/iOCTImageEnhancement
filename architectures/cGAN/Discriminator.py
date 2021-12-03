@@ -1,6 +1,14 @@
+import numpy as np
+
+import torch
+import torch.nn as nn
+
 class Discriminator(nn.Module):
-    def __init__(self):
+    def __init__(self, opt, img_shape):
         super(Discriminator, self).__init__()
+
+        self.opt = opt
+        self.img_shape = img_shape
 
         self.label_embedding = nn.Embedding(opt.n_classes, opt.n_classes)
 
