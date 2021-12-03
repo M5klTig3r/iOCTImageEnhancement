@@ -2,26 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/architectures/cGAN/parser.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/images/0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/images/1200.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/images/1600.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/images/400.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/architectures/images/800.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/t10k-images-idx3-ubyte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/t10k-images-idx3-ubyte.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/t10k-labels-idx1-ubyte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/t10k-labels-idx1-ubyte.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/train-images-idx3-ubyte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/train-images-idx3-ubyte.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/train-labels-idx1-ubyte" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mnist/MNIST/raw/train-labels-idx1-ubyte.gz" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN/Generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/Training.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +51,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="advanced.settings" />
   </component>
-  <component name="RunManager" selected="Python.cGAN_main (1)">
+  <component name="RunManager" selected="Python.cGAN_main">
     <configuration default="true" type="DjangoTestsConfigurationType">
       <module name="iOCTImageEnhancement" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -241,8 +225,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.cGAN_main (1)" />
         <item itemvalue="Python.cGAN_main" />
+        <item itemvalue="Python.cGAN_main (1)" />
       </list>
     </recent_temporary>
   </component>
