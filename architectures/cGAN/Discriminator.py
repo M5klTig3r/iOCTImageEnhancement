@@ -1,19 +1,39 @@
+import numpy as np
+
+import torch
+import torch.nn as nn
+
 class Discriminator(nn.Module):
-    def __init__(self):
+    def __init__(self, opt, img_shape):
         super(Discriminator, self).__init__()
+
+        self.opt = opt
+        self.img_shape = img_shape
 
         self.label_embedding = nn.Embedding(opt.n_classes, opt.n_classes)
 
+        def block(in_feat, out_feat, normalize=True, leaky=True, stride2=True):
+            layers = [nn.Linear(in_feat, out_feat)]
+            if normalize:
+                layers.append(nn.BatchNorm1d(out_feat, 0.8))
+            if leaky:
+                # TODO - what is inplace?
+                layers.append(nn.LeakyReLU(0.2, inplace=True))
+            # TODO - how do conv?
+            if stride2:
+                layers.append(nn.Conv2d(in_feat, out_feat, (4,4)))
+            else:
+                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4), (1, 1)))
+            layers.append(nn.LeakyReLU(0.2, inplace=True))
+            return layers
+
         self.model = nn.Sequential(
-            nn.Linear(opt.n_classes + int(np.prod(img_shape)), 512),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(512, 512),
-            nn.Dropout(0.4),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(512, 512),
-            nn.Dropout(0.4),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(512, 1),
+            *block(opt.n_classes + int(np.prod(img_shape)), 3*2, normalize=False),
+            *block(256, 64),
+            *block(128,128),
+            *block(64, 256, stride2=False),
+            *block(63, 512, normalize=False, leaky=False, stride2=False),
+            nn.Sigmoid()
         )
 
     def forward(self, img, labels):
