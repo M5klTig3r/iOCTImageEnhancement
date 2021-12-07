@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN/Generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
     </list>
@@ -31,6 +32,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="21YFRDv089iLI1tuTPluYSVoQVW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -95,6 +99,9 @@
     <configuration name="cGAN_main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="C:\Users\andyt\anaconda3\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/architectures" />
       <option name="IS_MODULE_SDK" value="false" />
@@ -130,7 +137,8 @@
       <workItem from="1638540240274" duration="3694000" />
       <workItem from="1638544092547" duration="493000" />
       <workItem from="1638557306712" duration="1645000" />
-      <workItem from="1638862027084" duration="7293000" />
+      <workItem from="1638862027084" duration="14291000" />
+      <workItem from="1638888476755" duration="3911000" />
     </task>
     <servers />
   </component>
@@ -147,7 +155,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -157,18 +164,39 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/architectures/cGAN_main.py</url>
-          <line>89</line>
-          <option name="timeStamp" value="1" />
+          <line>124</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/architectures/cGAN/Generator.py</url>
+          <line>73</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/architectures/cGAN_main.py</url>
+          <line>123</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="dataloader" />
+        <watch expression="iter(dataloader)" />
+        <watch expression="enumerate(dataloader)" />
+        <watch expression="elem" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/iOCTImageEnhancement$cGAN_main.coverage" NAME="cGAN_main Coverage Results" MODIFIED="1638865079177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/architectures" />
+    <SUITE FILE_PATH="coverage/iOCTImageEnhancement$cGAN_main__1_.coverage" NAME="cGAN_main (1) Coverage Results" MODIFIED="1638891829354" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/architectures" />
+    <SUITE FILE_PATH="coverage/iOCTImageEnhancement$cGAN_main.coverage" NAME="cGAN_main Coverage Results" MODIFIED="1638885317080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/architectures" />
   </component>
 </project>
