@@ -1,5 +1,3 @@
-import numpy as np
-
 import torch
 import torch.nn as nn
 
@@ -10,7 +8,6 @@ class Generator(nn.Module):
 
         self.opt = opt
         self.img_shape = img_shape
-        self.label_emb = nn.Embedding(opt.n_classes, opt.n_classes)
 
         def block(in_feat, out_feat, normalize=True, leaky=True, stride2=True):
             layers = [nn.Linear(in_feat, out_feat)]
@@ -32,7 +29,7 @@ class Generator(nn.Module):
 
         def encode():
             self.model = nn.Sequential(
-                *block(opt.latent_dim + opt.n_classes, 3, normalize=False),
+                *block(opt.latent_dim, 3, normalize=False),
                 *block(256, 64),  # added this line, but not sure about it. I still have a
                 *block(128, 128),
                 *block(64, 256),
@@ -44,7 +41,7 @@ class Generator(nn.Module):
 
         def decode():
             self.model = nn.Sequential(
-                nn.ConvTranspose2d(opt.latent_dim + opt.n_classes, 2, (4, 4)),
+                nn.ConvTranspose2d(opt.latent_dim, 2, (4, 4)),
                 nn.BatchNorm2d(512),
                 nn.ReLU(),
                 nn.ConvTranspose2d(1024, 4, (4, 4)),
@@ -74,7 +71,7 @@ class Generator(nn.Module):
 
     def forward(self, noise, labels):
         # Concatenate label embedding and image to produce input
-        gen_input = torch.cat((self.label_emb(labels), noise), -1)
+        gen_input = torch.cat((labels, noise), -1)
         img = self.model(gen_input)
         img = img.view(img.size(0), *self.img_shape)
         return img
