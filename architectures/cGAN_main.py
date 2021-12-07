@@ -26,15 +26,16 @@ os.makedirs("images", exist_ok=True)
 # TODO - i might not need all of this
 parser = argparse.ArgumentParser()
 parser.add_argument("--n_epochs", type=int, default=200, help="number of epochs of training")
-parser.add_argument("--batch_size", type=int, default=64, help="size of the batches")
-parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")
-parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")
-parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")
+parser.add_argument("--batch_size", type=int, default=127, help="size of the batches")
+parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate") # done
+parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient") # done
+parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")# done
 parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads to use during batch generation")
-parser.add_argument("--latent_dim", type=int, default=100, help="dimensionality of the latent space")
-parser.add_argument("--n_classes", type=int, default=10, help="number of classes for dataset")
-parser.add_argument("--img_size", type=int, default=32, help="size of each image dimension")
-parser.add_argument("--channels", type=int, default=1, help="number of image channels")
+parser.add_argument("--latent_dim", type=int, default=100, help="dimensionality of the latent space") # would be the bottleneck - the lowest size
+parser.add_argument("--n_classes", type=int, default=10, help="number of classes for dataset") # we don't have it
+# use 512 - rescale to squared
+parser.add_argument("--img_size", type=int, default=512, help="size of each image dimension") # TODO - 512 x 1024; size was 32 for imgs. of size 28x28
+parser.add_argument("--channels", type=int, default=1, help="number of image channels") # done
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
 
 opt = parser.parse_args()
@@ -46,7 +47,8 @@ cuda = True if torch.cuda.is_available() else False
 
 
 # Loss functions
-adversarial_loss = torch.nn.MSELoss()
+# L1 and edge loss
+adversarial_loss = torch.nn.L1Loss()
 
 # Initialize generator and discriminator
 generator = Generator(opt, img_shape)
@@ -60,17 +62,29 @@ if cuda:
 # Configure data loader
 os.makedirs("../data/mnist", exist_ok=True)
 dataloader = torch.utils.data.DataLoader(
-    datasets.MNIST(
-        "../data/mnist",
-        train=True,
-        download=True,
-        transform=transforms.Compose(
-            [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
-        ),
-    ),
+    dataset = "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203"
+              "/bigVol_9mm",
+#    datasets.MNIST(
+ #       "../data/mnist",
+  #      train=True,
+   #     download=True,
+    #    transform=transforms.Compose(
+     #       [transforms.Resize(opt.img_size), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
+      #  ),
+#    ),
+
     batch_size=opt.batch_size,
     shuffle=True,
 )
+
+transform = transforms.Compose([
+    # resize
+    transforms.Resize(opt.img_size),
+    # to-tensor
+    transforms.ToTensor(),
+    # normalize - how?
+    transforms.Normalize([0.5,0.5,0.5], [0.5,0.5,0.5])
+])
 
 # Optimizers
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
