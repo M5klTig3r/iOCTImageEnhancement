@@ -1,37 +1,35 @@
-import numpy as np
-
 import torch
 import torch.nn as nn
 
 
 class Discriminator(nn.Module):
-    def __init__(self, opt, img_shape):
+    def __init__(self, img_shape):
         super(Discriminator, self).__init__()
+        self.channel = img_shape[0]
+        self.img_size = img_shape[1]
 
-        self.opt = opt
-        self.img_shape = img_shape
-
-        def block(in_feat, out_feat, normalize=True, leaky=True, stride2=True):
-            layers = [nn.Linear(in_feat, out_feat)]
+        def block(img_channels, features_d, normalize=True, leaky=True, stride2=True):
+            layers = [nn.Linear(in_features=img_channels, out_features=features_d)]
             if normalize:
-                layers.append(nn.BatchNorm1d(out_feat, 0.8))
+                layers.append(nn.BatchNorm2d(num_features=features_d, momentum=0.8))
             if leaky:
                 # TODO - what is inplace?
                 layers.append(nn.LeakyReLU(0.2, inplace=True))
             # TODO - how do conv?
             if stride2:
-                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4)))
+                layers.append(nn.Conv2d(in_channels=img_channels, out_channels=features_d, kernel_size=(4, 4)))
             else:
-                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4), (1, 1)))
-            layers.append(nn.LeakyReLU(0.2, inplace=True))
+                layers.append(
+                    nn.Conv2d(in_channels=img_channels, out_channels=features_d, kernel_size=(4, 4), stride=(1, 1)))
+            layers.append(nn.LeakyReLU(0.2))
             return layers
 
         self.model = nn.Sequential(
-            *block(int(np.prod(img_shape)), 3 * 2, normalize=False),
-            *block(256, 64),
-            *block(128, 128),
-            *block(64, 256, stride2=False),
-            *block(63, 512, normalize=False, leaky=False, stride2=False),
+            *block(img_channels=(3 * 2), features_d=self.img_size, normalize=False),
+            *block(img_channels=64, features_d=256),
+            *block(img_channels=128, features_d=128),
+            *block(img_channels=64, features_d=512, stride2=False),
+            *block(img_channels=63, features_d=1, normalize=False, leaky=False, stride2=False),
             nn.Sigmoid()
         )
 

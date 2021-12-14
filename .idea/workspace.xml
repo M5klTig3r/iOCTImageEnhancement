@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/architectures/cgan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN/Generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
     </list>
@@ -49,9 +51,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TestProject" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/architectures" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="advanced.settings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\Andrea_Master\PMSD\iOCTImageEnhancement\architectures" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.cGAN_main (1)">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -117,9 +124,32 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="cgan" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="iOCTImageEnhancement" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/architectures" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/architectures/cgan.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.cGAN_main (1)" />
+        <item itemvalue="Python.cgan" />
         <item itemvalue="Python.cGAN_main" />
       </list>
     </recent_temporary>
@@ -140,6 +170,8 @@
       <workItem from="1638888476755" duration="4717000" />
       <workItem from="1639046680545" duration="2483000" />
       <workItem from="1639126227674" duration="28146000" />
+      <workItem from="1639466182522" duration="4894000" />
+      <workItem from="1639472573180" duration="16645000" />
     </task>
     <servers />
   </component>
@@ -165,23 +197,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/architectures/cGAN/Generator.py</url>
-          <line>78</line>
-          <option name="timeStamp" value="14" />
+          <line>61</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/architectures/cGAN_main.py</url>
-          <line>117</line>
-          <option name="timeStamp" value="15" />
+          <line>148</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/architectures/cGAN_main.py</url>
-          <line>126</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/architectures/cGAN_main.py</url>
-          <line>138</line>
-          <option name="timeStamp" value="19" />
+          <url>file://$PROJECT_DIR$/architectures/cGAN/Generator.py</url>
+          <line>65</line>
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -199,7 +226,7 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/iOCTImageEnhancement$cGAN_main__1_.coverage" NAME="cGAN_main (1) Coverage Results" MODIFIED="1639162257981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/architectures" />
+    <SUITE FILE_PATH="coverage/iOCTImageEnhancement$cGAN_main__1_.coverage" NAME="cGAN_main (1) Coverage Results" MODIFIED="1639490982709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/architectures" />
     <SUITE FILE_PATH="coverage/iOCTImageEnhancement$cGAN_main.coverage" NAME="cGAN_main Coverage Results" MODIFIED="1638885317080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/architectures" />
   </component>
 </project>
