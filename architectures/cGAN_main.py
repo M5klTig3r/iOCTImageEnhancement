@@ -4,10 +4,12 @@
 
 import argparse
 import os
+import matplotlib.pyplot as plt
 import numpy as np
 import torchvision.datasets as datasets
 
 import torchvision.transforms as transforms
+import torchvision.transforms.functional
 from torchvision.utils import save_image
 
 from torch.utils.data import DataLoader
@@ -18,11 +20,12 @@ import torch
 from architectures.cGAN.Discriminator import Discriminator
 from architectures.cGAN.Generator import Generator
 
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 os.makedirs("images", exist_ok=True)
 
 # TODO - i might not need all of this
 parser = argparse.ArgumentParser()
-parser.add_argument("--n_epochs", type=int, default=200, help="number of epochs of training")
+parser.add_argument("--n_epochs", type=int, default=1, help="number of epochs of training")
 parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
 parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")  # done
 parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")  # done
@@ -31,7 +34,7 @@ parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads 
 parser.add_argument("--latent_dim", type=int, default=100,
                     help="dimensionality of the latent space")  # would be the bottleneck - the lowest size
 # use 512 - rescale to squared
-parser.add_argument("--img_size", type=int, default=256,
+parser.add_argument("--img_size", type=int, default=512,
                     help="size of each image dimension")  # TODO - 512 x 1024; size was 32 for images. of size 28x28
 parser.add_argument("--channels", type=int, default=1, help="number of image channels")  # done
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
@@ -69,7 +72,10 @@ if cuda:
 dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
     "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
     transform=transforms.Compose(
-        [transforms.Resize((opt.img_size, opt.img_size)), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
+        [ # transforms.Grayscale(num_output_channels=1),
+         transforms.Resize((opt.img_size, opt.img_size)),
+         transforms.ToTensor(),
+         transforms.Normalize([0.5], [0.5])]
     ),
 ),
     batch_size=opt.batch_size,
@@ -99,11 +105,15 @@ def sample_image(n_row, batches_done):
 # ----------
 #  Training
 # ----------
+def my_plot(epochs, g_loss, d_loss):
+    plt.plot(epochs, g_loss)
+    plt.plot(epochs, d_loss)
+
 groundTruth = 0
 for j, (images, labels) in enumerate(dataloader):
     if j == 1:
         groundTruth = images
-
+loss_vals=[]
 for epoch in range(opt.n_epochs):
     # Debug purpose.
     #    print("Dataset Size: \n")
@@ -112,14 +122,15 @@ for epoch in range(opt.n_epochs):
     #    print(dataloader.dataset.__getitem__(0))
     #    print("\nData Size: \n")
     #    print(dataloader.dataset.__getitem__(0).__sizeof__())
-
+    epoch_g_loss = []
+    epoch_d_loss = []
     for i, (images, labels) in enumerate(dataloader):
 
         if i == 0:
             continue
         batch_size = images.shape[0]
-        print(images.shape)
-        print(labels.shape)
+        #print(images.shape)
+        #print(labels.shape)
         # Adversarial ground truths
         valid = Variable(FloatTensor(batch_size, 1).fill_(1.0), requires_grad=False)
         fake = Variable(FloatTensor(batch_size, 1).fill_(0.0), requires_grad=False)
@@ -127,6 +138,8 @@ for epoch in range(opt.n_epochs):
         # Configure input
         # real_images are the slices
         # labels = averaged images
+        #print("Real imges before making them variables")
+        #print(images.shape)
         real_images = Variable(images.type(FloatTensor))
         labels = Variable(labels.type(LongTensor))
 
@@ -140,19 +153,20 @@ for epoch in range(opt.n_epochs):
         # labels - ground truth
         # images - real images
         gen_labels = Variable(groundTruth.type(FloatTensor)) # labels are the input images
-        print("Real images")
-        print(real_images.shape)
-        print("Labels aka ground truth")
-        print(gen_labels.shape)
+        #print("Real images")
+        #print(real_images.shape)
+        #print("Labels aka ground truth")
+        #print(gen_labels.shape)
 
         # Generate a batch of images
-        gen_images = generator.forward(real_images, gen_labels)
+        gen_images = generator.forward(real_images)
 
         # Loss measures generator's ability to fool the discriminator
         validity = discriminator.forward(gen_images, gen_labels)
         g_loss = adversarial_loss(validity, valid)
 
         g_loss.backward()
+        epoch_g_loss.append(g_loss.item())
         optimizer_G.step()
 
         # ---------------------
@@ -162,7 +176,7 @@ for epoch in range(opt.n_epochs):
         optimizer_D.zero_grad()
 
         # Loss for real images
-        validity_real = discriminator.forward(real_images, labels)
+        validity_real = discriminator.forward(real_images, gen_labels)
         d_real_loss = adversarial_loss(validity_real, valid)
 
         # Loss for fake images
@@ -173,6 +187,7 @@ for epoch in range(opt.n_epochs):
         d_loss = (d_real_loss + d_fake_loss) / 2
 
         d_loss.backward()
+        epoch_d_loss.append(d_loss.item())
         optimizer_D.step()
 
         print(
@@ -183,3 +198,7 @@ for epoch in range(opt.n_epochs):
         batches_done = epoch * len(dataloader) + i
         if batches_done % opt.sample_interval == 0:
             sample_image(n_row=10, batches_done=batches_done)
+
+        my_plot(np.linspace(1, opt.n_epochs, opt.n_epochs).astype(int), g_loss.detach().numpy(), d_loss.detach().numpy())
+
+plt.show()
