@@ -9,7 +9,6 @@ import numpy as np
 import torchvision.datasets as datasets
 
 import torchvision.transforms as transforms
-import torchvision.transforms.functional
 from torchvision.utils import save_image
 
 from torch.utils.data import DataLoader
@@ -25,7 +24,7 @@ os.makedirs("images", exist_ok=True)
 
 # TODO - i might not need all of this
 parser = argparse.ArgumentParser()
-parser.add_argument("--n_epochs", type=int, default=1, help="number of epochs of training")
+parser.add_argument("--n_epochs", type=int, default=10, help="number of epochs of training")
 parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
 parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")  # done
 parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")  # done
@@ -37,7 +36,7 @@ parser.add_argument("--latent_dim", type=int, default=100,
 parser.add_argument("--img_size", type=int, default=512,
                     help="size of each image dimension")  # TODO - 512 x 1024; size was 32 for images. of size 28x28
 parser.add_argument("--channels", type=int, default=1, help="number of image channels")  # done
-parser.add_argument("--sample_interval", type=int, default=25, help="interval between image sampling")
+parser.add_argument("--sample_interval", type=int, default=100, help="interval between image sampling")
 parser.add_argument("--padding", type=int, default=(1, 1), help="Padding for image convolution.")
 parser.add_argument("--dilation", type=int, default=(1, 1), help="Dilation for image convolution.")
 parser.add_argument("--output_padding", type=int, default=(0, 0), help="output_padding for image convolution.")
@@ -69,7 +68,8 @@ if cuda:
 # os.makedirs("../data/mnist", exist_ok=True)
 
 dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
-    "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
+    "../../iOCT/bigVol_9mm",
+    # "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
     transform=transforms.Compose(
         [  # transforms.Grayscale(num_output_channels=1),
             transforms.Resize((opt.img_size, opt.img_size)),
@@ -94,7 +94,7 @@ def sample_image(n_row, batches_done, current_epoch, real_images, labels):
     """Saves a grid of generated digits ranging from 0 to n_classes"""
     gen_images = generator.forward(real_images)
     # TODO - create folder conditionally
-    save_image(gen_images.data, "images/%d_%d.png" % current_epoch % batches_done, nrow=n_row, normalize=True)
+    save_image(gen_images.data, f"images/{current_epoch}_{batches_done}.png", nrow=n_row, normalize=True)
 
 
 # ----------
@@ -193,9 +193,10 @@ for epoch in range(opt.n_epochs):
 
         batches_done = epoch * len(dataloader) + i
         if batches_done % opt.sample_interval == 0:
-            sample_image(n_row=10, batches_done=batches_done, current_epoch=epoch, real_images=real_images, labels=labels)
+            sample_image(n_row=10, batches_done=batches_done, current_epoch=epoch, real_images=real_images,
+                         labels=labels)
 
-        my_plot(np.linspace(1, opt.n_epochs, opt.n_epochs).astype(int), g_loss.detach().numpy(),
-                d_loss.detach().numpy())
+        # my_plot(np.linspace(1, opt.n_epochs, opt.n_epochs).astype(int), g_loss.detach().numpy(),
+        #        d_loss.detach().numpy())
 
 plt.show()
