@@ -113,3 +113,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 architectures/siim-acr/src/pneumothorax-segmentation/
+*.png
