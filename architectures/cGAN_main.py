@@ -18,6 +18,7 @@ import torch
 
 from architectures.cGAN.Discriminator import Discriminator
 from architectures.cGAN.Generator import Generator
+# from architectures.cGAN.UNet import UNet
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.makedirs("images", exist_ok=True)
@@ -59,6 +60,9 @@ adversarial_loss = torch.nn.L1Loss()
 generator = Generator(img_shape)
 discriminator = Discriminator(img_shape)
 
+# TEST
+# testGenerator = UNet()
+
 if cuda:
     generator.cuda()
     discriminator.cuda()
@@ -68,10 +72,10 @@ if cuda:
 # os.makedirs("../data/mnist", exist_ok=True)
 
 dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
-    "../../iOCT/bigVol_9mm",
-    # "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
+    # "../../iOCT/bigVol_9mm",
+    "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
     transform=transforms.Compose(
-        [  # transforms.Grayscale(num_output_channels=1),
+        [transforms.Grayscale(num_output_channels=1),
             transforms.Resize((opt.img_size, opt.img_size)),
             transforms.ToTensor(),
             transforms.Normalize([0.5], [0.5])]
@@ -90,7 +94,7 @@ FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 LongTensor = torch.cuda.LongTensor if cuda else torch.LongTensor
 
 
-def sample_image(n_row, batches_done, current_epoch, real_images, labels):
+def sample_image(n_row, batches_done, current_epoch, real_images):
     """Saves a grid of generated digits ranging from 0 to n_classes"""
     gen_images = generator.forward(real_images)
     # TODO - create folder conditionally
@@ -193,8 +197,7 @@ for epoch in range(opt.n_epochs):
 
         batches_done = epoch * len(dataloader) + i
         if batches_done % opt.sample_interval == 0:
-            sample_image(n_row=10, batches_done=batches_done, current_epoch=epoch, real_images=real_images,
-                         labels=labels)
+            sample_image(n_row=10, batches_done=batches_done, current_epoch=epoch, real_images=real_images)
 
         # my_plot(np.linspace(1, opt.n_epochs, opt.n_epochs).astype(int), g_loss.detach().numpy(),
         #        d_loss.detach().numpy())

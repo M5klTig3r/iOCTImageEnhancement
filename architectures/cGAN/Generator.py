@@ -21,10 +21,10 @@ class Generator(nn.Module):
         # encode
         self.model = nn.Sequential(
             # N x channels x 512 x 512
-            nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(4, 4), stride=(2, 2), padding=1),  # 256x256
+            nn.Conv2d(in_channels=1, out_channels=64, kernel_size=(4, 4), stride=(2, 2), padding=1),  # 256x256
             nn.LeakyReLU(0.2),
             # *block(in_feat=3, out_feat=64),
-            * block(in_feat=64, out_feat=128),  # 128x128
+            *block(in_feat=64, out_feat=128),  # 128x128
             *block(in_feat=128, out_feat=256),  # 64x64
             *block(in_feat=256, out_feat=512),  # 32x32
             *block(in_feat=512, out_feat=512),  # 16x16
@@ -60,7 +60,7 @@ class Generator(nn.Module):
             # 256x256
             nn.BatchNorm2d(128),
             nn.ReLU(),
-            nn.ConvTranspose2d(in_channels=128, out_channels=3, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            nn.ConvTranspose2d(in_channels=128, out_channels=1, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
             # 512x512
             # nn.BatchNorm2d(3),
             # nn.ReLU(),

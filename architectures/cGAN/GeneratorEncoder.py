@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
-import ConvolutionBlock
+
+from architectures.cGAN.ConvolutionBlock import ConvolutionBlock
 
 
-class Encoder(nn.Module):
+class GeneratorEncoder(nn.Module):
 
     def __init__(self, chs):
         super().__init__()
@@ -13,7 +14,7 @@ class Encoder(nn.Module):
         # initialize an empty list to store the intermediate outputs
         blockOutputs = []
         # loop through the encoder blocks
-        for block in self.encBlocks:
+        for block in self.enc_blocks:
             # pass the inputs through the current encoder block, store
             # the outputs
             x = block(x)
@@ -21,3 +22,4 @@ class Encoder(nn.Module):
 
         # return the list containing the intermediate outputs
         return blockOutputs
+

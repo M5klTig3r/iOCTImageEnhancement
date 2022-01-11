@@ -16,7 +16,7 @@ class Discriminator(nn.Module):
             )
 
         self.model = nn.Sequential(
-            nn.Conv2d(in_channels=(3 * 2), out_channels=64, kernel_size=(4,4), stride=(2, 2), padding=(1,1)),
+            nn.Conv2d(in_channels=(1 * 2), out_channels=64, kernel_size=(4,4), stride=(2, 2), padding=(1,1)),
             nn.LeakyReLU(0.2),
             *block(img_channels=64, features_d=128),
             *block(img_channels=128, features_d=256),
