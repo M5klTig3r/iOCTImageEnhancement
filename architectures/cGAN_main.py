@@ -64,6 +64,7 @@ discriminator = Discriminator(img_shape)
 testGenerator = UNet()
 
 if cuda:
+    testGenerator.cuda()
     generator.cuda()
     discriminator.cuda()
     adversarial_loss.cuda()
@@ -72,8 +73,8 @@ if cuda:
 # os.makedirs("../data/mnist", exist_ok=True)
 
 dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
-    # "../../iOCT/bigVol_9mm",
-    "../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
+    "../../iOCT/bigVol_9mm",
+    #"../../ImageDenoising(Averaging)Cubes/sorted/cut_eye_no_needle/86271bd2-31fb-436f-9e31-9ec5a3a4f7648203/bigVol_9mm",
     transform=transforms.Compose(
         [transforms.Grayscale(num_output_channels=1),
             transforms.Resize((opt.img_size, opt.img_size)),
