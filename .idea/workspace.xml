@@ -2,14 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/iOCTImageEnhancement.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/iOCTImageEnhancement.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/architectures/cGAN/Encoder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/ConvolutionBlock.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/ConvolutionBlock.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Discriminator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/Generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Generator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/GeneratorEncoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/GeneratorEncoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN/ConvolutionBlock.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Block.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Decoder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN/GeneratorEncoder.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN/UNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/UNet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
     </list>
@@ -66,7 +63,7 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.cGAN_main (1)">
-    <configuration name="ConvolutionBlock" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Block" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="iOCTImageEnhancement" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -79,7 +76,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/architectures/cGAN/ConvolutionBlock.py" />
+      <option name="SCRIPT_NAME" value="F:\Andrea_Master\PMSD\iOCTImageEnhancement\architectures\cGAN\Block.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -88,7 +85,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="GeneratorDecoder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Decoder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="iOCTImageEnhancement" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -101,7 +98,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py" />
+      <option name="SCRIPT_NAME" value="F:\Andrea_Master\PMSD\iOCTImageEnhancement\architectures\cGAN\Decoder.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -110,7 +107,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="GeneratorEncoder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Encoder" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="iOCTImageEnhancement" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -123,7 +120,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/architectures/cGAN/GeneratorEncoder.py" />
+      <option name="SCRIPT_NAME" value="F:\Andrea_Master\PMSD\iOCTImageEnhancement\architectures\cGAN\Encoder.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -264,7 +261,7 @@
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py</url>
+          <url>file://$PROJECT_DIR$/architectures/cGAN/Decoder.py</url>
           <line>29</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
@@ -274,14 +271,9 @@
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py</url>
+          <url>file://$PROJECT_DIR$/architectures/cGAN/Decoder.py</url>
           <line>25</line>
           <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/architectures/cGAN/UNet.py</url>
-          <line>35</line>
-          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
