@@ -18,7 +18,7 @@ import torch
 
 from architectures.cGAN.Discriminator import Discriminator
 from architectures.cGAN.Generator import Generator
-# from architectures.cGAN.UNet import UNet
+from architectures.cGAN.UNet import UNet
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 os.makedirs("images", exist_ok=True)
@@ -61,7 +61,7 @@ generator = Generator(img_shape)
 discriminator = Discriminator(img_shape)
 
 # TEST
-# testGenerator = UNet()
+testGenerator = UNet()
 
 if cuda:
     generator.cuda()
@@ -87,7 +87,7 @@ dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
 
 # Optimizers
 
-optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+optimizer_G = torch.optim.Adam(testGenerator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 
 FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
@@ -96,7 +96,7 @@ LongTensor = torch.cuda.LongTensor if cuda else torch.LongTensor
 
 def sample_image(n_row, batches_done, current_epoch, real_images):
     """Saves a grid of generated digits ranging from 0 to n_classes"""
-    gen_images = generator.forward(real_images)
+    gen_images = testGenerator.forward(real_images)
     # TODO - create folder conditionally
     save_image(gen_images.data, f"images/{current_epoch}_{batches_done}.png", nrow=n_row, normalize=True)
 
@@ -159,7 +159,7 @@ for epoch in range(opt.n_epochs):
         # print(gen_labels.shape)
 
         # Generate a batch of images
-        gen_images = generator.forward(real_images)
+        gen_images = testGenerator.forward(real_images)
 
         # Loss measures generator's ability to fool the discriminator
         validity = discriminator.forward(gen_images, gen_labels)
