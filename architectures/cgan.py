@@ -1,7 +1,7 @@
 import argparse
 import os
 import numpy as np
-import math
+import matplotlib as plt
 
 import torchvision.transforms as transforms
 from torchvision.utils import save_image
@@ -138,6 +138,11 @@ def sample_image(n_row, batches_done):
 #  Training
 # ----------
 
+generator_loss_set = []
+discriminator_loss_set = []
+
+fig = plt.figure()
+
 for epoch in range(opt.n_epochs):
     for i, (imgs, labels) in enumerate(dataloader):
 
@@ -193,6 +198,9 @@ for epoch in range(opt.n_epochs):
         d_loss.backward()
         optimizer_D.step()
 
+        generator_loss_set.append(g_loss)
+        discriminator_loss_set.append(d_loss)
+
         print(
             "[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]"
             % (epoch, opt.n_epochs, i, len(dataloader), d_loss.item(), g_loss.item())
@@ -201,3 +209,18 @@ for epoch in range(opt.n_epochs):
         batches_done = epoch * len(dataloader) + i
         if batches_done % opt.sample_interval == 0:
             sample_image(n_row=10, batches_done=batches_done)
+
+# plot the results
+plt.xlabel('epoch')
+plt.ylabel('loss')
+plt.title('GCN on cora dataset')
+if len(discriminator_loss_set) < opt.n_epochs:
+    # in case of early stopping
+    epochs_array = np.arange(0, len(discriminator_loss_set))
+else:
+    # no early stopping
+    epochs_array = np.arange(0, opt.n_epochs)
+plt.plot(epochs_array, discriminator_loss_set, label="Discriminator loss")
+plt.plot(epochs_array, generator_loss_set, label="Generator loss")
+plt.legend()
+plt.show()

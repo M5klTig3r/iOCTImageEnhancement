@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/architectures/cGAN/Encoder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/ConvolutionBlock.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Block.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/GeneratorDecoder.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/Decoder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/GeneratorEncoder.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN/UNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/UNet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/architectures/cGAN_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cgan.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cgan.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
