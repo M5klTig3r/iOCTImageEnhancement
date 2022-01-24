@@ -119,6 +119,7 @@ groundTruth = 0
 for j, (images, labels) in enumerate(dataloader):
     if j == 1:
         groundTruth = images
+
 generator_loss_set = []
 discriminator_loss_set = []
 
@@ -181,7 +182,6 @@ for epoch in range(opt.n_epochs):
         # g_loss = 1 - adversarial_loss(output, groundTruth)
 
         g_loss.backward()
-        epoch_g_loss.append(g_loss.item())
         optimizer_G.step()
 
         # ---------------------
@@ -235,12 +235,7 @@ for epoch in range(opt.n_epochs):
 plt.xlabel('epoch')
 plt.ylabel('loss')
 plt.title('cGAN on iOCT data')
-if len(discriminator_loss_set) < opt.n_epochs:
-    # in case of early stopping
-    epochs_array = np.arange(0, len(discriminator_loss_set))
-else:
-    # no early stopping
-    epochs_array = np.arange(0, opt.n_epochs)
+epochs_array = np.arange(0, len(discriminator_loss_set))
 plt.plot(epochs_array, discriminator_loss_set, label="Discriminator loss")
 plt.plot(epochs_array, generator_loss_set, label="Generator loss")
 plt.legend()

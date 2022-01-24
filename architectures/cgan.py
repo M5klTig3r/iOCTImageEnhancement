@@ -1,7 +1,6 @@
 import argparse
 import os
 import numpy as np
-import matplotlib as plt
 
 import torchvision.transforms as transforms
 from torchvision.utils import save_image
@@ -137,8 +136,6 @@ def sample_image(n_row, batches_done):
 # ----------
 #  Training
 # ----------
-
-
 
 for epoch in range(opt.n_epochs):
     for i, (imgs, labels) in enumerate(dataloader):
