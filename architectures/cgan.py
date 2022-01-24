@@ -138,10 +138,7 @@ def sample_image(n_row, batches_done):
 #  Training
 # ----------
 
-generator_loss_set = []
-discriminator_loss_set = []
 
-fig = plt.figure()
 
 for epoch in range(opt.n_epochs):
     for i, (imgs, labels) in enumerate(dataloader):
@@ -198,8 +195,6 @@ for epoch in range(opt.n_epochs):
         d_loss.backward()
         optimizer_D.step()
 
-        generator_loss_set.append(g_loss)
-        discriminator_loss_set.append(d_loss)
 
         print(
             "[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]"
@@ -210,17 +205,3 @@ for epoch in range(opt.n_epochs):
         if batches_done % opt.sample_interval == 0:
             sample_image(n_row=10, batches_done=batches_done)
 
-# plot the results
-plt.xlabel('epoch')
-plt.ylabel('loss')
-plt.title('GCN on cora dataset')
-if len(discriminator_loss_set) < opt.n_epochs:
-    # in case of early stopping
-    epochs_array = np.arange(0, len(discriminator_loss_set))
-else:
-    # no early stopping
-    epochs_array = np.arange(0, opt.n_epochs)
-plt.plot(epochs_array, discriminator_loss_set, label="Discriminator loss")
-plt.plot(epochs_array, generator_loss_set, label="Generator loss")
-plt.legend()
-plt.show()
