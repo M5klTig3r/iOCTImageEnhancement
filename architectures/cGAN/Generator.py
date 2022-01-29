@@ -1,77 +1,91 @@
 import torch
 import torch.nn as nn
+import torchvision.transforms.functional
 
 
 class Generator(nn.Module):
-    def __init__(self, opt, img_shape):
+    def __init__(self, img_shape):
         super(Generator, self).__init__()
-
-        self.opt = opt
         self.img_shape = img_shape
+        self.img_size = img_shape[1]
+        self.channels = img_shape[0]
+        self.label_emb = nn.Embedding(self.img_size, self.img_size * self.img_size)
 
-        def block(in_feat, out_feat, normalize=True, leaky=True, stride2=True):
-            layers = [nn.Linear(in_feat, out_feat)]
-            # TODO - how do conv?
-            if stride2:
-                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4)))
-            else:
-                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4)))
-
-            if normalize:
-                layers.append(nn.BatchNorm2d(out_feat, 0.8))
-
-            if leaky:
-                # TODO - what is inplace?
-                layers.append(nn.LeakyReLU(0.2, inplace=True))
-            else:
-                layers.append(nn.ReLU())
-            return layers
-
-        def encode():
-            self.model = nn.Sequential(
-                *block(opt.latent_dim, 3, normalize=False),
-                *block(256, 64),  # added this line, but not sure about it. I still have a
-                *block(128, 128),
-                *block(64, 256),
-                *block(32, 512),
-                *block(16, 512),
-                *block(8, 512),
-                *block(4, 512)
+        def block(in_feat, out_feat):
+            return nn.Sequential(
+                nn.Conv2d(in_channels=in_feat, out_channels=out_feat, kernel_size=(4, 4), stride=(2, 2), padding=1),
+                nn.BatchNorm2d(num_features=out_feat),
+                nn.LeakyReLU(0.2)
             )
 
-        def decode():
-            self.model = nn.Sequential(
-                nn.ConvTranspose2d(opt.latent_dim, 2, (4, 4)),
-                nn.BatchNorm2d(512),
-                nn.ReLU(),
-                nn.ConvTranspose2d(1024, 4, (4, 4)),
-                nn.BatchNorm2d(1024),
-                nn.ReLU(),
-                nn.ConvTranspose2d(1024, 8, (4, 4)),
-                nn.BatchNorm2d(1024),
-                nn.ReLU(),
-                nn.ConvTranspose2d(1024, 16, (4, 4)),
-                nn.BatchNorm2d(1024),
-                nn.ReLU(),
-                nn.ConvTranspose2d(1024, 32, (4, 4)),
-                nn.BatchNorm2d(1024),
-                nn.ReLU(),
-                nn.ConvTranspose2d(512, 64, (4, 4)),
-                nn.BatchNorm2d(512),
-                nn.ReLU(),
-                nn.ConvTranspose2d(256, 128, (4, 4)),
-                nn.BatchNorm2d(256),
-                nn.ReLU(),
-                nn.ConvTranspose2d(256, 128, (4, 4)),
-                nn.Tanh()
-            )
+        # encode
+        self.model = nn.Sequential(
+            # N x channels x 512 x 512
+            nn.Conv2d(in_channels=1, out_channels=64, kernel_size=(4, 4), stride=(2, 2), padding=1),  # 256x256
+            nn.LeakyReLU(0.2),
+            # *block(in_feat=3, out_feat=64),
+            *block(in_feat=64, out_feat=128),  # 128x128
+            *block(in_feat=128, out_feat=256),  # 64x64
+            *block(in_feat=256, out_feat=512),  # 32x32
+            *block(in_feat=512, out_feat=512),  # 16x16
+            *block(in_feat=512, out_feat=512),  # 8x8
+            *block(in_feat=512, out_feat=512),  # 4x4
+            *block(in_feat=512, out_feat=512),  # 2x2
+            nn.ConvTranspose2d(in_channels=512, out_channels=1024, stride=(2, 2), kernel_size=(4, 4), padding=(1, 1)),
+            # 4x4
+            nn.BatchNorm2d(num_features=1024),
+            nn.ReLU(),
+            nn.ConvTranspose2d(in_channels=1024, out_channels=1024, stride=(2, 2), kernel_size=(4, 4), padding=(1, 1)),
+            # 8x8
+            nn.BatchNorm2d(num_features=1024),
+            nn.ReLU(),
+            nn.ConvTranspose2d(in_channels=1024, out_channels=1024, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 16x16
+            nn.BatchNorm2d(num_features=1024),
+            nn.ReLU(),
+            nn.ConvTranspose2d(in_channels=1024, out_channels=1024, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 32x32
+            nn.BatchNorm2d(num_features=1024),
+            nn.ReLU(),
+            nn.ConvTranspose2d(in_channels=1024, out_channels=512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 64x64
+            nn.BatchNorm2d(num_features=512),
+            nn.ReLU(),
+            # N x channels x 64 x 64
+            nn.ConvTranspose2d(in_channels=512, out_channels=256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 128x128
+            nn.BatchNorm2d(num_features=256),
+            nn.ReLU(),
+            nn.ConvTranspose2d(in_channels=256, out_channels=128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 256x256
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.ConvTranspose2d(in_channels=128, out_channels=1, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 512x512
+            # nn.BatchNorm2d(3),
+            # nn.ReLU(),
+            # nn.ConvTranspose2d(in_channels=3, out_channels=1, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+            # 1024x1024
+            nn.Tanh()
+        )
 
-        encode()
-        decode()
-
-    def forward(self, noise, labels):
+    def forward(self, images):
         # Concatenate label embedding and image to produce input
-        gen_input = torch.cat((labels, noise), -1)
-        img = self.model(gen_input)
-        img = img.view(img.size(0), *self.img_shape)
+        # gen_input = torch.cat((labels, noise), dim=-1)
+        #print("Generated input for generator")
+        #print(images.shape)
+        img = self.model(images)
+        #print("Model output")
+        #print(img.shape)
+        #print("Img.size is")
+        #print(img.shape)
+        #print("img.size(0) is")
+        #print(img.size(0))
+        #print("*self.img_shape is")
+        #print(*self.img_shape)
+        #print("Self.Image shape is")
+        #print(self.img_shape)
+        # img = img.view(img.size(0), *self.img_shape)
+        #print("Generator output")
+        #print(img.shape)
         return img

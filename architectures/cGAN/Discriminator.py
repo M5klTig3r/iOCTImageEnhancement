@@ -1,42 +1,41 @@
-import numpy as np
-
 import torch
 import torch.nn as nn
 
 
 class Discriminator(nn.Module):
-    def __init__(self, opt, img_shape):
+    def __init__(self, img_shape):
         super(Discriminator, self).__init__()
+        self.channel = img_shape[0]
+        self.img_size = img_shape[1]
 
-        self.opt = opt
-        self.img_shape = img_shape
-
-        def block(in_feat, out_feat, normalize=True, leaky=True, stride2=True):
-            layers = [nn.Linear(in_feat, out_feat)]
-            if normalize:
-                layers.append(nn.BatchNorm1d(out_feat, 0.8))
-            if leaky:
-                # TODO - what is inplace?
-                layers.append(nn.LeakyReLU(0.2, inplace=True))
-            # TODO - how do conv?
-            if stride2:
-                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4)))
-            else:
-                layers.append(nn.Conv2d(in_feat, out_feat, (4, 4), (1, 1)))
-            layers.append(nn.LeakyReLU(0.2, inplace=True))
-            return layers
+        def block(img_channels, features_d):
+            return nn.Sequential(
+                nn.Conv2d(in_channels=img_channels, out_channels=features_d, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1)),
+                nn.BatchNorm2d(num_features=features_d, momentum=0.8),
+                nn.LeakyReLU(0.2)
+            )
 
         self.model = nn.Sequential(
-            *block(int(np.prod(img_shape)), 3 * 2, normalize=False),
-            *block(256, 64),
-            *block(128, 128),
-            *block(64, 256, stride2=False),
-            *block(63, 512, normalize=False, leaky=False, stride2=False),
+            nn.Conv2d(in_channels=(1 * 2), out_channels=64, kernel_size=(4,4), stride=(2, 2), padding=(1,1)),
+            nn.LeakyReLU(0.2),
+            *block(img_channels=64, features_d=128),
+            *block(img_channels=128, features_d=256),
+            nn.Conv2d(in_channels=256, out_channels=512, kernel_size=(4,4), stride=(1, 1), padding=(1, 1)),
+            nn.BatchNorm2d(num_features=512),
+            nn.LeakyReLU(0.2),
+            nn.Conv2d(in_channels=512, out_channels=1, kernel_size=(4, 4), stride=(1, 1), padding=(1, 1)),
             nn.Sigmoid()
         )
 
     def forward(self, img, labels):
         # Concatenate label embedding and image to produce input
-        d_in = torch.cat((img.view(img.size(0), -1), labels), -1)
+        #print(img.shape)
+        #print(labels.shape)
+        #print("Image size(0)")
+        #print(img.size(0))
+        # first round we need d_in to be: [1, 6, 512, 512]
+        # second round we need d_in to be:
+        # third round we need d_in to be:
+        d_in = torch.cat((img, labels), 1)
         validity = self.model(d_in)
         return validity
