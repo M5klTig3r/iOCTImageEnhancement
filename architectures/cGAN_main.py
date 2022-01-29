@@ -13,8 +13,9 @@ from torchvision.utils import save_image
 
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
-
 import torch
+
+from pytorch_msssim import SSIM
 
 from architectures.cGAN.Discriminator import Discriminator
 from architectures.cGAN.Generator import Generator
@@ -25,9 +26,9 @@ os.makedirs("images", exist_ok=True)
 
 # TODO - i might not need all of this
 parser = argparse.ArgumentParser()
-parser.add_argument("--n_epochs", type=int, default=300, help="number of epochs of training")
-parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
-parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")  # done
+parser.add_argument("--n_epochs", type=int, default=10, help="number of epochs of training")
+parser.add_argument("--batch_size", type=int, default=4, help="size of the batches")  # more than 8 is trouble for VRam
+parser.add_argument("--lr", type=float, default=0.0004, help="adam: learning rate")  # done
 parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")  # done
 parser.add_argument("--b2", type=float, default=0.999, help="adam: decay of first order momentum of gradient")  # done
 parser.add_argument("--n_cpu", type=int, default=8, help="number of cpu threads to use during batch generation")
@@ -54,12 +55,13 @@ torch.cuda.empty_cache()
 
 # Loss functions
 # L1
-adversarial_loss = torch.nn.L1Loss()
+# adversarial_loss = torch.nn.L1Loss()
 # L1 and edge loss
 # MSE
-# adversarial_loss 0  torch.nn.MSELoss()
-# SSIM
-# adversarial_loss = SSIM(win_size=11, win_sigma=1.5, data_range=1, size_average=True, channel=1)
+# adversarial_loss = torch.nn.MSELoss()
+# SSIM adversarial_loss = SSIM(win_size=11, win_sigma=1.5, data_range=opt.batch_size, size_average=True, channel=1)
+# might be enough to set win_size
+# channel is needed
 
 # Initialize generator and discriminator
 generator = Generator(img_shape)
@@ -68,11 +70,19 @@ discriminator = Discriminator(img_shape)
 # TEST
 testGenerator = UNet()
 
+# Optimizers
+
+optimizer_G = torch.optim.Adam(testGenerator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
+
 if cuda:
+    print("Cuda TRUE")
     testGenerator.cuda()
     generator.cuda()
     discriminator.cuda()
     adversarial_loss.cuda()
+else:
+    print("Cuda FALSE")
 
 # Configure data loader
 # os.makedirs("../data/mnist", exist_ok=True)
@@ -90,21 +100,21 @@ dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
     shuffle=True,
 )
 
-# Optimizers
-
-optimizer_G = torch.optim.Adam(testGenerator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
-optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
-
 FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 LongTensor = torch.cuda.LongTensor if cuda else torch.LongTensor
 
 
 def sample_image(n_row, batches_done, current_epoch, real_images):
     """Saves a grid of generated digits ranging from 0 to n_classes"""
-    gen_images = testGenerator.forward(real_images)
+    input = Variable(images.type(FloatTensor))
+    gen_images = testGenerator.forward(input)
     # TODO - create folder conditionally
-    save_image(real_images.data, f"../../output_images/{current_epoch}_input_{batches_done}.png", nrow=n_row)
-    save_image(gen_images.data, f"../../output_images/{current_epoch}_output_{batches_done}.png", nrow=n_row)
+    save_image(input.data,
+               f"../../output_images/Huber_b{opt.batch_size}_e{opt.n_epochs}_lr0004/{current_epoch}_{batches_done}_input.png",
+               nrow=n_row)  # do not normalize
+    save_image(gen_images.data,
+               f"../../output_images/Huber_b{opt.batch_size}_e{opt.n_epochs}_lr0004/{current_epoch}_{batches_done}_output.png",
+               nrow=n_row)  # do not normalize
 
 
 # ----------
@@ -134,16 +144,16 @@ for epoch in range(opt.n_epochs):
     #    print(dataloader.dataset.__getitem__(0).__sizeof__())
     epoch_g_loss = []
     epoch_d_loss = []
+
     for i, (images, labels) in enumerate(dataloader):
 
         if i == 0:
             continue
-        batch_size = images.shape[0]
         # print(images.shape)
         # print(labels.shape)
         # Adversarial ground truths
-        valid = Variable(FloatTensor(batch_size, 1).fill_(1.0), requires_grad=False)
-        fake = Variable(FloatTensor(batch_size, 1).fill_(0.0), requires_grad=False)
+        valid = Variable(FloatTensor(opt.batch_size, 1, 62, 62).fill_(1.0), requires_grad=False)
+        fake = Variable(FloatTensor(opt.batch_size, 1, 62, 62).fill_(0.0), requires_grad=False)
 
         # Configure input
         # real_images are the slices
@@ -173,13 +183,13 @@ for epoch in range(opt.n_epochs):
 
         # Loss measures generator's ability to fool the discriminator
         validity = discriminator.forward(gen_images, gen_labels)
-        # L1 loss
+        # L1 loss and MSE
+        # print(f"Validity is size: {validity.size()}")
+        # print(f"Valid is size: {valid.size()}")
         g_loss = adversarial_loss(validity, valid)
         # L1 and edge loss
-        # MSE
-        # g_loss = adversarial_loss(output, groundTruth)
         # SSIM
-        # g_loss = 1 - adversarial_loss(output, groundTruth)
+        # g_loss = 1 - adversarial_loss(validity, valid)
 
         g_loss.backward()
         optimizer_G.step()
@@ -192,23 +202,19 @@ for epoch in range(opt.n_epochs):
 
         # Loss for real images
         validity_real = discriminator.forward(real_images, gen_labels)
-        # L1 loss
+        # L1 loss & MSE
         d_real_loss = adversarial_loss(validity_real, valid)
         # L1 and edge loss
-        # MSE
-        # d_real_loss = adversarial_loss(output, groundTruth)
         # SSIM
-        # d_real_loss = 1 - adversarial_loss(output, groundTruth)
+        # d_real_loss = 1 - adversarial_loss(validity_real, valid)
 
         # Loss for fake images
         validity_fake = discriminator.forward(gen_images.detach(), gen_labels)
-        # L1 loss
+        # L1 loss & MSE
         d_fake_loss = adversarial_loss(validity_fake, fake)
         # L1 and edge loss
-        # MSE
-        # d_fake_loss = adversarial_loss(output, groundTruth)
         # SSIM
-        # d_fake_loss = 1 - adversarial_loss(output, groundTruth)
+        # d_fake_loss = 1 - adversarial_loss(validity_fake, fake)
 
         # Total discriminator loss
         d_loss = (d_real_loss + d_fake_loss) / 2
@@ -221,22 +227,27 @@ for epoch in range(opt.n_epochs):
 
         print(
             "[Epoch %d/%d] [Batch %d/%d] [D loss: %f] [G loss: %f]"
-            % (epoch, opt.n_epochs, i, len(dataloader), d_loss.item(), g_loss.item())
+            % (epoch, opt.n_epochs, i, len(dataloader), d_loss, g_loss)
         )
 
         batches_done = epoch * len(dataloader) + i
         if batches_done % opt.sample_interval == 0:
-            sample_image(n_row=10, batches_done=batches_done, current_epoch=epoch, real_images=real_images)
+            sample_image(n_row=4, batches_done=batches_done, current_epoch=epoch, real_images=real_images)
 
         # my_plot(np.linspace(1, opt.n_epochs, opt.n_epochs).astype(int), g_loss.detach().numpy(),
         #        d_loss.detach().numpy())
 
 # plot the results
-plt.xlabel('epoch')
+plt.xlabel('batches')
 plt.ylabel('loss')
-plt.title('cGAN on iOCT data')
+plt.title(f'cGAN on iOCT data')
 epochs_array = np.arange(0, len(discriminator_loss_set))
 plt.plot(epochs_array, discriminator_loss_set, label="Discriminator loss")
 plt.plot(epochs_array, generator_loss_set, label="Generator loss")
 plt.legend()
+# plt.savefig(f"../../L1_b{opt.batch_size}_e{opt.n_epochs}_lr0004.png")
+plt.savefig(f"../../output_images/Huber_b{opt.batch_size}_e{opt.n_epochs}_lr0004.png")
 plt.show()
+
+# for automatic shutdown after finishing
+# os.system("shutdown /s /t 60")
