@@ -55,7 +55,7 @@ torch.cuda.empty_cache()
 
 # Loss functions
 # L1
-# adversarial_loss = torch.nn.L1Loss()
+adversarial_loss = torch.nn.L1Loss()
 # L1 and edge loss
 # MSE
 # adversarial_loss = torch.nn.MSELoss()
@@ -209,6 +209,7 @@ for epoch in range(opt.n_epochs):
         # d_real_loss = 1 - adversarial_loss(validity_real, valid)
 
         # Loss for fake images
+        # Is it input vs truth or input vs generated?
         validity_fake = discriminator.forward(gen_images.detach(), gen_labels)
         # L1 loss & MSE
         d_fake_loss = adversarial_loss(validity_fake, fake)
