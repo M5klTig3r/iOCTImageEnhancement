@@ -114,3 +114,4 @@ dmypy.json
 .pyre/
 architectures/siim-acr/src/pneumothorax-segmentation/
 *.png
+*.bmp
