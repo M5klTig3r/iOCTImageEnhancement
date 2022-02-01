@@ -26,7 +26,7 @@ os.makedirs("images", exist_ok=True)
 
 # TODO - i might not need all of this
 parser = argparse.ArgumentParser()
-parser.add_argument("--n_epochs", type=int, default=1, help="number of epochs of training")
+parser.add_argument("--n_epochs", type=int, default=30, help="number of epochs of training")
 parser.add_argument("--batch_size", type=int, default=4, help="size of the batches")  # more than 8 is trouble for VRam
 parser.add_argument("--lr", type=float, default=0.0004, help="adam: learning rate")  # done
 parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")  # done
@@ -38,7 +38,7 @@ parser.add_argument("--latent_dim", type=int, default=100,
 parser.add_argument("--img_size", type=int, default=512,
                     help="size of each image dimension")  # TODO - 512 x 1024; size was 32 for images. of size 28x28
 parser.add_argument("--channels", type=int, default=1, help="number of image channels")  # done
-parser.add_argument("--sample_interval", type=int, default=10, help="interval between image sampling")
+parser.add_argument("--sample_interval", type=int, default=8, help="interval between image sampling")
 parser.add_argument("--padding", type=int, default=(1, 1), help="Padding for image convolution.")
 parser.add_argument("--dilation", type=int, default=(1, 1), help="Dilation for image convolution.")
 parser.add_argument("--output_padding", type=int, default=(0, 0), help="output_padding for image convolution.")
@@ -90,10 +90,11 @@ else:
 dataloader = torch.utils.data.DataLoader(datasets.ImageFolder(
     "../data/input",
     transform=transforms.Compose(
-        [transforms.Grayscale(num_output_channels=1),
+        [transforms.Grayscale(num_output_channels=opt.channels),
          transforms.Resize((opt.img_size, opt.img_size)),
-         transforms.ToTensor(),
-         transforms.Normalize([0.5], [0.5])]
+         transforms.ToTensor(), # automatically normalizes to [0, 1]
+         transforms.Normalize([0.5], [0.5])
+        ]
     ),
 ),
     batch_size=opt.batch_size,
@@ -104,16 +105,28 @@ FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 LongTensor = torch.cuda.LongTensor if cuda else torch.LongTensor
 
 
+def normalize(image):
+    normalized_image = torch.empty(image.size())
+    for i, channels in enumerate(image):
+        for j, rows in enumerate(channels):
+            div = torch.div(rows, 2.0)
+            normalized_image[i, j] = torch.mul(torch.add(div, 0.5), 255)
+    return normalized_image
+
+
 def sample_image(n_row, batches_done, current_epoch, real_images):
     """Saves a grid of generated digits ranging from 0 to n_classes"""
     input = Variable(real_images.type(FloatTensor))
     gen_images = testGenerator.forward(input)
     # TODO - create folder conditionally
+    path = f"../../output_images/L1_b{opt.batch_size}_e{opt.n_epochs}_lr0004"
+    if not os.path.exists(path):
+        os.makedirs(path)
     save_image(input.data,
-               f"../../output_images/Huber_b{opt.batch_size}_e{opt.n_epochs}_lr0004/{current_epoch}_{batches_done}_input.png",
-               nrow=n_row)  # do not normalize
-    save_image(gen_images.data,
-               f"../../output_images/Huber_b{opt.batch_size}_e{opt.n_epochs}_lr0004/{current_epoch}_{batches_done}_output.png",
+               f"{path}/{current_epoch}_{batches_done}_input.png",
+               nrow=n_row, normalize=True)
+    save_image(normalize(gen_images).data,
+               f"{path}/{current_epoch}_{batches_done}_output.png",
                nrow=n_row)  # do not normalize
 
 
@@ -180,6 +193,9 @@ for epoch in range(opt.n_epochs):
 
         # Generate a batch of images
         gen_images = testGenerator.forward(real_images)
+       # trans = transforms.Compose([transforms.ToTensor()])
+      #  test = trans(gen_images)
+       # gen_images_norm = normalize(gen_images)
 
         # Loss measures generator's ability to fool the discriminator
         validity = discriminator.forward(gen_images, gen_labels)
@@ -247,7 +263,7 @@ plt.plot(epochs_array, discriminator_loss_set, label="Discriminator loss")
 plt.plot(epochs_array, generator_loss_set, label="Generator loss")
 plt.legend()
 # plt.savefig(f"../../L1_b{opt.batch_size}_e{opt.n_epochs}_lr0004.png")
-plt.savefig(f"../../output_images/Huber_b{opt.batch_size}_e{opt.n_epochs}_lr0004.png")
+plt.savefig(f"../../output_images/L1_b{opt.batch_size}_e{opt.n_epochs}_lr0004.png")
 plt.show()
 
 # for automatic shutdown after finishing
