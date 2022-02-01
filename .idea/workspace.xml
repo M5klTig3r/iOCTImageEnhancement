@@ -228,6 +228,7 @@
       <workItem from="1643016801598" duration="4528000" />
       <workItem from="1643469583972" duration="284000" />
       <workItem from="1643482387928" duration="7179000" />
+
     </task>
     <servers />
   </component>
@@ -275,6 +276,7 @@
           <url>file://$PROJECT_DIR$/architectures/cGAN_main.py</url>
           <line>188</line>
           <option name="timeStamp" value="12" />
+
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
