@@ -17,6 +17,7 @@ import torch
 
 from pytorch_msssim import SSIM
 
+from architectures.cGAN.EdgeSensitiveLoss import EdgeSensitiveLoss
 from architectures.cGAN.Discriminator import Discriminator
 from architectures.cGAN.Generator import Generator
 from architectures.cGAN.UNet import UNet
@@ -56,6 +57,7 @@ torch.cuda.empty_cache()
 # Loss functions
 # L1
 adversarial_loss = torch.nn.L1Loss()
+generator_loss = EdgeSensitiveLoss()
 # L1 and edge loss
 # MSE
 # adversarial_loss = torch.nn.MSELoss()
@@ -199,16 +201,6 @@ for epoch in range(opt.n_epochs):
 
         # Loss measures generator's ability to fool the discriminator
         validity = discriminator.forward(gen_images, gen_labels)
-        # L1 loss and MSE
-        # print(f"Validity is size: {validity.size()}")
-        # print(f"Valid is size: {valid.size()}")
-        g_loss = adversarial_loss(validity, valid)
-        # L1 and edge loss
-        # SSIM
-        # g_loss = 1 - adversarial_loss(validity, valid)
-
-        g_loss.backward()
-        optimizer_G.step()
 
         # ---------------------
         #  Train Discriminator
@@ -227,9 +219,9 @@ for epoch in range(opt.n_epochs):
         # Loss for fake images
         # Is it input vs truth or input vs generated?
         validity_fake = discriminator.forward(gen_images.detach(), gen_labels)
-        # L1 loss & MSE
+        validity_fake_edge_loss = discriminator.forward(real_images, gen_labels)
+        # L1 loss & MSE & Edge loss
         d_fake_loss = adversarial_loss(validity_fake, fake)
-        # L1 and edge loss
         # SSIM
         # d_fake_loss = 1 - adversarial_loss(validity_fake, fake)
 
@@ -238,6 +230,22 @@ for epoch in range(opt.n_epochs):
 
         d_loss.backward()
         optimizer_D.step()
+
+        # ---------------------
+        #  Calculate loss Generator
+        # ---------------------
+
+        # L1 loss and MSE
+        # print(f"Validity is size: {validity.size()}")
+        # print(f"Valid is size: {valid.size()}")
+        g_loss = adversarial_loss(validity, valid)
+        # L1 and edge loss
+        # g_loss = generator_loss.optimization(generated_images=gen_images, d_fake=validity_fake_edge_loss, d_real=validity_real)
+        # SSIM
+        # g_loss = 1 - adversarial_loss(validity, valid)
+
+        g_loss.backward()
+        optimizer_G.step()
 
         generator_loss_set.append(g_loss.item())
         discriminator_loss_set.append(d_loss.item())

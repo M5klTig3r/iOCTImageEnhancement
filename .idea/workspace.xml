@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="924ec943-25c9-448f-aa8d-547abd9b28c1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/architectures/cGAN/EdgeSensitiveLoss.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN/EdgeSensitiveLoss.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/architectures/cGAN_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/architectures/cGAN_main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -223,7 +227,10 @@
       <workItem from="1642760170803" duration="1752000" />
       <workItem from="1643016801598" duration="4528000" />
       <workItem from="1643469583972" duration="284000" />
-      <workItem from="1643482387928" duration="7179000" />
+      <workItem from="1643482387928" duration="7243000" />
+      <workItem from="1643553098055" duration="2415000" />
+      <workItem from="1643555632259" duration="13473000" />
+      <workItem from="1643575479813" duration="37000" />
     </task>
     <servers />
   </component>
