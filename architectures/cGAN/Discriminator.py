@@ -29,13 +29,19 @@ class Discriminator(nn.Module):
 
     def forward(self, img, labels):
         # Concatenate label embedding and image to produce input
-        #print(img.shape)
-        #print(labels.shape)
-        #print("Image size(0)")
-        #print(img.size(0))
+        #        print(img.shape)
+        #        print(labels.shape)
+        #        print("Image size(0)")
+        #        print(img.size(0))
         # first round we need d_in to be: [1, 6, 512, 512]
         # second round we need d_in to be:
         # third round we need d_in to be:
         d_in = torch.cat((img, labels), 1)
+        #        print(d_in.shape)
+        #        print("d_in size(0)")
+        #        print(d_in.size(0))
         validity = self.model(d_in)
+        #        print(validity.shape)
+        #        print("validity size(0)")
+        #        print(validity.size(0))
         return validity
